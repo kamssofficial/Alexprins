@@ -1,10 +1,16 @@
 # Alex Prins — Dallas REALTOR®
 
-Premium editorial real-estate website concept built locally with Vite + React.
+Premium editorial real-estate website built with Vite + React.
+
+## Hosting
+
+The source is maintained in the private GitHub repository `kamssofficial/Alexprins`. GitHub Pages deployment is configured through `.github/workflows/deploy-pages.yml`.
+
+Expected hosted URL: https://kamssofficial.github.io/Alexprins/
 
 ## Local-only status
 
-This build is intentionally **not published through Manus**. It is a local working copy in the private GitHub repository `kamssofficial/Alexprins`.
+This site is not published through Manus. GitHub Pages is the requested hosting destination.
 
 ## Run locally
 
