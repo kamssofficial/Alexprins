@@ -1,0 +1,75 @@
+import React, { useState } from 'react';
+import { createRoot } from 'react-dom/client';
+import { ArrowUpRight, ChevronDown, ChevronRight, Home, Menu, Phone, Search, X } from 'lucide-react';
+import './styles.css';
+
+const phone = '(504) 400-7822';
+const areas = ['Dallas', 'Highland Park', 'Oak Lawn', 'Addison', 'Irving', 'Richardson', 'Plano', 'Frisco', 'Garland', 'McKinney'];
+const demoProperties = [
+  { name: 'Demonstration search result', meta: 'Dallas · Location not connected', type: 'Homes', price: 'Price unavailable', img: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85' },
+  { name: 'Demonstration search result', meta: 'Highland Park · Location not connected', type: 'Luxury', price: 'Price unavailable', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85' },
+  { name: 'Demonstration search result', meta: 'DFW · Listing data not connected', type: 'Townhomes', price: 'Price unavailable', img: 'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85' }
+];
+const transactions = ['1840 Euclid Ave Unit 102 · Dallas, TX 75206', '420 E Grandview Ave · Dallas, TX 75223', '4528 Live Oak St #1–4 · Dallas, TX 75204', '626 Wayne St · Dallas, TX 75223', '2317 Hondo Ave · Dallas, TX 75219'];
+
+function App() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [intent, setIntent] = useState('buying');
+  const [propertyType, setPropertyType] = useState('All types');
+  const [showConsult, setShowConsult] = useState(false);
+  const [showAssistant, setShowAssistant] = useState(false);
+  const [sent, setSent] = useState(false);
+  const intentCopy = {
+    buying: ['I’m buying', 'Start your property search', 'Explore homes, condos and townhomes across Dallas and DFW.'],
+    selling: ['I’m selling', 'Discuss your property', 'Start with a thoughtful conversation about your home and goals.'],
+    relocating: ['I’m relocating', 'Plan your move to DFW', 'Get oriented around neighborhoods, lifestyle and what fits next.'],
+    exploring: ['I’m exploring', 'Explore Dallas', 'Take a considered first look at the places and possibilities ahead.']
+  };
+  const filtered = propertyType === 'All types' ? demoProperties : demoProperties.filter(p => p.type === propertyType || (propertyType === 'Homes' && p.type === 'Luxury'));
+  const closeMenu = () => setMenuOpen(false);
+  return <div className="site-shell">
+    <header className="topbar">
+      <a className="wordmark" href="#top" onClick={closeMenu}><span>AP</span><b>ALEX PRINS</b><small>DALLAS REALTOR®</small></a>
+      <nav className={menuOpen ? 'main-nav open' : 'main-nav'}>{[['BUY','#buy'],['SELL','#sell'],['RELOCATE','#relocate'],['PROPERTIES','#properties'],['ABOUT','#about'],['DFW','#dfw'],['CONTACT','#contact']].map(([label, href]) => <a key={label} href={href} onClick={closeMenu}>{label}</a>)}</nav>
+      <a className="nav-cta" href="#contact">Schedule a consultation <ArrowUpRight size={15}/></a>
+      <button className="menu-btn" aria-label="Open menu" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X/> : <Menu/>}</button>
+    </header>
+
+    <main id="top">
+      <section className="hero section-dark">
+        <div className="hero-bg" />
+        <div className="hero-content page-width"><p className="eyebrow light">DALLAS · DFW · COMPASS RE TEXAS, LLC</p><h1>Dallas real estate,<br/><em>personally navigated.</em></h1><p className="hero-copy">Helping buyers, sellers and relocating clients navigate Dallas and the DFW market with a personalized approach to real estate.</p><div className="hero-actions"><a className="button button-gold" href="#properties">Explore properties <ArrowUpRight size={16}/></a><button className="text-button light" onClick={() => setShowConsult(true)}>Schedule a consultation <ChevronRight size={15}/></button></div></div>
+        <div className="hero-stamp"><span>12</span><small>YEARS OF<br/>EXPERIENCE</small></div>
+        <div className="hero-scroll">SCROLL TO EXPLORE <span></span></div>
+      </section>
+
+      <section className="trust-strip"><div className="page-width trust-grid"><span>Dallas REALTOR®</span><i></i><span>12 years experience</span><i></i><span>Buy · Sell · Relocate</span><i></i><span>Dallas–Fort Worth</span></div></section>
+
+      <section className="intent-section page-width"><div className="section-intro"><p className="eyebrow">A PLACE TO BEGIN</p><h2>Where are you<br/><em>headed next?</em></h2></div><div className="intent-panel"><div className="intent-tabs">{Object.entries(intentCopy).map(([key, value]) => <button className={intent === key ? 'active' : ''} onClick={() => setIntent(key)} key={key}>{value[0]} <span>↗</span></button>)}</div><div className="intent-result"><p className="eyebrow">{intentCopy[intent][0]}</p><h3>{intentCopy[intent][1]}</h3><p>{intentCopy[intent][2]}</p><a href={intent === 'buying' ? '#properties' : '#contact'} className="arrow-link">Continue <ArrowUpRight size={15}/></a></div></div></section>
+
+      <section className="search-section" id="properties"><div className="page-width"><div className="section-heading-row"><div><p className="eyebrow">PROPERTY DISCOVERY</p><h2>Find your place<br/><em>in Dallas.</em></h2></div><a className="arrow-link" href="#contact">Need a more personal search? <ArrowUpRight size={15}/></a></div><div className="search-bar"><div><label>Location</label><strong>Dallas & DFW</strong></div><div><label>Property type</label><select value={propertyType} onChange={e => setPropertyType(e.target.value)}><option>All types</option><option>Homes</option><option>Condos</option><option>Townhomes</option><option>Luxury</option></select></div><div><label>Price range</label><strong>Any price</strong></div><button className="button button-dark"><Search size={16}/> Search properties</button></div><div className="demo-note"><span>DEMO PROPERTY EXPERIENCE</span> Live listings require a legitimate MLS / IDX connection. These examples are for interface demonstration only.</div><div className="property-grid">{filtered.map(p => <article className="property-card" key={p.name}><div className="property-image"><img src={p.img} alt="Editorial residential architecture" loading="lazy"/><span>DEMO PROPERTY</span><button aria-label="Save property">♡</button></div><div className="property-meta"><div><p className="eyebrow">{p.type} · {p.meta}</p><h3>{p.name}</h3></div><strong>{p.price}</strong></div><div className="property-foot"><span>Interface example</span><a href="#contact">Request information <ArrowUpRight size={14}/></a></div></article>)}</div></div></section>
+
+      <section className="split-story page-width" id="buy"><div className="story-image tall-image"><img src="https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=85" alt="Warm contemporary home interior" loading="lazy"/></div><div className="story-copy"><p className="eyebrow">BUYING IN DALLAS</p><h2>A clear point of view<br/><em>from the beginning.</em></h2><p>Whether you're purchasing your first home, moving to Dallas, searching for a luxury property, or exploring the DFW market, the process should feel clear from the beginning.</p><div className="service-list">{['First-time buyers','Luxury homes','Relocation','New construction','Condos & townhomes','Investment'].map((x,i)=><div key={x}><span>0{i+1}</span>{x}<ChevronRight size={15}/></div>)}</div><a className="arrow-link" href="#contact">Start your search <ArrowUpRight size={15}/></a></div></section>
+
+      <section className="dark-band" id="sell"><div className="page-width two-col"><div><p className="eyebrow light">SELLING IN DALLAS</p><h2>Ready to<br/><em>sell?</em></h2></div><div><p className="large-copy">Your property deserves thoughtful positioning, strong presentation and a clear strategy from the first conversation.</p><div className="process-line">{['Property preparation','Marketing presentation','Buyer exposure','Offer evaluation','Negotiation','Transaction coordination'].map((x,i)=><div key={x}><span>0{i+1}</span>{x}</div>)}</div><button className="button button-gold" onClick={() => setShowConsult(true)}>Discuss selling <ArrowUpRight size={16}/></button></div></div></section>
+
+      <section className="relocate-section page-width" id="dfw"><div id="relocate"><div className="section-heading-row"><div><p className="eyebrow">THE DFW GUIDE</p><h2>Moving to<br/><em>Dallas?</em></h2></div><p className="section-lead">Relocating is more than choosing a property. It's understanding neighborhoods, lifestyle, commute and what fits the way you want to live.</p></div><div className="area-grid">{areas.map((area,i)=><button key={area} className={i===0 ? 'area-card selected' : 'area-card'}><span>0{i+1}</span><strong>{area}</strong><small>Explore area <ArrowUpRight size={13}/></small></button>)}</div></div></section>
+
+      <section className="luxury-section"><div className="page-width luxury-grid"><div className="luxury-copy"><p className="eyebrow">A CONSIDERED APPROACH</p><h2>Luxury,<br/><em>without the noise.</em></h2><p>A quieter kind of guidance for homes where architecture, location, privacy and lifestyle all matter.</p><a href="#contact" className="arrow-link">Explore the luxury experience <ArrowUpRight size={15}/></a></div><div className="luxury-image"><img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=85" alt="Minimal luxury living space" loading="lazy"/><span>ARCHITECTURE / LOCATION / LIFESTYLE</span></div></div></section>
+
+      <section className="transactions page-width"><div className="section-heading-row"><div><p className="eyebrow">VERIFIED HISTORICAL DATA</p><h2>Selected Dallas<br/><em>transactions.</em></h2></div><p className="section-lead">A small selection of past addresses shown on public profiles. These are historical transactions — not current listings.</p></div><div className="transaction-list">{transactions.map((x,i)=><div key={x}><span>PAST TRANSACTION</span><strong>{x}</strong><small>Dallas, Texas</small><i><ArrowUpRight size={16}/></i></div>)}</div></section>
+
+      <section className="about-section" id="about"><div className="page-width about-grid"><div className="about-mark">AP</div><div><p className="eyebrow">MEET ALEX</p><h2>Local knowledge.<br/><em>Personal guidance.</em></h2><p>Alex Prins is a Dallas REALTOR® associated with Compass RE Texas, LLC, helping buyers, sellers and relocating clients navigate the Dallas–Fort Worth market.</p><p>His public professional profiles highlight experience across residential real estate, including buyer representation, listings, relocation and luxury homes.</p><div className="about-tags"><span>Dallas</span><span>DFW</span><span>Buy</span><span>Sell</span><span>Relocate</span></div></div></div></section>
+
+      <section className="contact-section" id="contact"><div className="page-width contact-grid"><div><p className="eyebrow light">START WITH A CONVERSATION</p><h2>Let's talk about<br/><em>your next move.</em></h2><p>Buying, selling, relocating, or simply exploring what's next? Start with a conversation.</p><a className="phone-link" href="tel:+15044007822"><Phone size={16}/> {phone}</a></div><form className="contact-form" onSubmit={e => { e.preventDefault(); setSent(true); }}><div className="form-row"><label>First name<input required placeholder="First name"/></label><label>Last name<input required placeholder="Last name"/></label></div><label>Email<input required type="email" placeholder="you@example.com"/></label><label>I'm interested in<select><option>Buying</option><option>Selling</option><option>Relocating</option><option>Luxury</option><option>New Construction</option><option>Condos / Townhomes</option><option>Land</option><option>Rentals</option><option>Investment</option><option>Other</option></select></label><label>Message<textarea placeholder="Tell Alex a little about what you're looking for..." rows="4"/></label><button className="button button-gold" type="submit">{sent ? 'Inquiry ready to send' : 'Send inquiry'} <ArrowUpRight size={16}/></button>{sent && <p className="form-success">Demo form complete. Connect this form to your preferred CRM or email service before launch.</p>}</form></div></section>
+    </main>
+
+    <footer className="footer"><div className="page-width footer-top"><div className="footer-brand"><a className="wordmark inverse" href="#top"><span>AP</span><b>ALEX PRINS</b><small>DALLAS REALTOR®</small></a><p>Compass RE Texas, LLC<br/>5960 Berkshire Ln #700<br/>Dallas, TX 75225</p><a href="tel:+15044007822">{phone}</a></div><div className="footer-links"><div><p className="eyebrow">EXPLORE</p><a href="#buy">Buy</a><a href="#sell">Sell</a><a href="#relocate">Relocate</a><a href="#properties">Properties</a></div><div><p className="eyebrow">CONNECT</p><a href="#about">About Alex</a><a href="#dfw">DFW guide</a><a href="#contact">Contact</a><a href="#contact">Schedule</a></div></div></div><div className="page-width footer-bottom"><span>© 2026 Alex Prins. All rights reserved.</span><span>Equal Housing Opportunity · Privacy · Terms · Disclosures</span><span>MLS / IDX attribution required when connected.</span></div></footer>
+
+    <div className="mobile-actions"><a href="tel:+15044007822"><Phone size={17}/> Call</a><a href="#properties"><Search size={17}/> Search</a><a href="#contact"><Home size={17}/> Contact</a></div>
+    <button className="assistant-trigger" onClick={() => setShowAssistant(!showAssistant)} aria-label="Open property assistant">{showAssistant ? <X/> : <span>AP</span>}</button>
+    {showAssistant && <div className="assistant"><div className="assistant-head"><div><b>Alex's property assistant</b><small>Grounded in verified site information</small></div><button onClick={() => setShowAssistant(false)}><X size={16}/></button></div><p>How can I help you get oriented?</p>{['Help me find a home in Dallas.','I’m relocating to DFW.','What areas does Alex serve?'].map(x=><button key={x} onClick={() => setShowConsult(true)}>{x}<ArrowUpRight size={14}/></button>)}<small className="assistant-note">I won't invent listings, prices or availability. When I'm unsure, I'll connect you with Alex.</small></div>}
+    {showConsult && <div className="modal-backdrop" onClick={() => setShowConsult(false)}><div className="consult-modal" onClick={e => e.stopPropagation()}><button className="modal-close" onClick={() => setShowConsult(false)}><X/></button><p className="eyebrow">SCHEDULE A CONSULTATION</p><h2>Let's make the<br/><em>next move clear.</em></h2><p>Choose a starting point. No appointment is confirmed until a genuine scheduling service is connected.</p><div className="consult-options">{['Buy','Sell','Relocate','Explore'].map(x=><button key={x} onClick={() => setShowConsult(false)}>{x}<ArrowUpRight size={15}/></button>)}</div><a className="button button-dark" href="#contact" onClick={() => setShowConsult(false)}>Continue to contact <ArrowUpRight size={16}/></a></div></div>}
+  </div>
+}
+createRoot(document.getElementById('root')).render(<App />);
