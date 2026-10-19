@@ -4,7 +4,7 @@ Premium editorial real-estate website built with Vite + React.
 
 ## Hosting
 
-The source is maintained in the private GitHub repository `kamssofficial/Alexprins`. GitHub Pages deployment is configured through `.github/workflows/deploy-pages.yml`.
+The source is maintained in the public GitHub repository `kamssofficial/Alexprins`. GitHub Pages deployment is configured through `.github/workflows/deploy-pages.yml`.
 
 Expected hosted URL: https://kamssofficial.github.io/Alexprins/
 
